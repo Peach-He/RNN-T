@@ -20,7 +20,8 @@ from .iterator import DaliRnntIterator
 from .pipeline import DaliPipeline
 from common.helpers import print_once
 
-
+# 获取json文件中的transcript、filename、duration，并为文件打上label（一个递增数）
+# outputfiles: {filename -> {label: ,duration: }}
 def _parse_json(json_path: str, start_label=0, predicate=lambda json: True):
     """
     Parses json file to the format required by DALI
@@ -101,7 +102,8 @@ class DaliDataLoader:
         self.sampler.make_file_list(output_files, json_names)
         self.dataset_size = self.sampler.get_dataset_size()
         print_once(f"Dataset read by DALI. Number of samples: {self.dataset_size}")
-
+        print(f'config data: {config_data}')
+        print(f'config feature: {config_features}')
         pipeline = DaliPipeline.from_config(config_data=config_data, config_features=config_features, device_id=gpu_id,
                                             file_root=dataset_path, sampler=self.sampler,
                                             device_type=self.device_type, batch_size=self.batch_size,

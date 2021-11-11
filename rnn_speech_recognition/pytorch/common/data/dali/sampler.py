@@ -44,7 +44,7 @@ class SimpleSampler:
     def process_output_files(self, output_files):
         self.dataset_size = len(output_files)
         return [ (path, entry['label']) for path, entry in output_files.items() ]
-
+    # 将filename：label写入文件
     def make_file_list(self, output_files, json_names):
         self.file_list_path = os.path.join(
             "/tmp",

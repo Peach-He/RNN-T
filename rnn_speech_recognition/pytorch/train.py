@@ -21,9 +21,9 @@ import time
 import torch
 import numpy as np
 import torch.distributed as dist
-from apex import amp
-from apex.optimizers import FusedLAMB
-from apex.parallel import DistributedDataParallel
+import torch_optimizer as optim
+from torch.nn.parallel import DistributedDataParallel as DDP
+import intel_pytorch_extension as ipex
 
 from common import helpers
 from common.data.dali import sampler as dali_sampler
@@ -40,7 +40,6 @@ from rnnt.loss import RNNTLoss
 from rnnt.model import RNNT
 
 from mlperf import logging
-
 
 def parse_args():
     parser = argparse.ArgumentParser(description='RNN-T Training Reference')
@@ -187,10 +186,9 @@ def main():
 
     args = parse_args()
 
-    assert(torch.cuda.is_available())
     assert args.prediction_frequency is None or args.prediction_frequency % args.log_frequency == 0
 
-    torch.backends.cudnn.benchmark = args.cudnn_benchmark
+    # torch.backends.cudnn.benchmark = args.cudnn_benchmark
 
     # set up distributed training
     multi_gpu = int(os.environ.get('WORLD_SIZE', 1)) > 1
@@ -273,7 +271,7 @@ def main():
 
     class PermuteAudio(torch.nn.Module):
         def forward(self, x):
-            return (x[0].permute(2, 0, 1), *x[1:])
+            return (x[0].permute(2, 0, 1).contiguous(), *x[1:])
 
     train_augmentations = torch.nn.Sequential(
         train_specaugm_kw and features.SpecAugment(optim_level=args.amp, **train_specaugm_kw) or torch.nn.Identity(),
@@ -299,7 +297,7 @@ def main():
     else:
         sampler = dali_sampler.SimpleSampler()
 
-    train_loader = DaliDataLoader(gpu_id=args.local_rank,
+    train_loader = DaliDataLoader(gpu_id=None,
                                   dataset_path=args.dataset_dir,
                                   config_data=train_dataset_kw,
                                   config_features=train_features_kw,
@@ -311,7 +309,7 @@ def main():
                                   device_type=args.dali_device,
                                   tokenizer=tokenizer)
 
-    val_loader = DaliDataLoader(gpu_id=args.local_rank,
+    val_loader = DaliDataLoader(gpu_id=None,
                                     dataset_path=args.dataset_dir,
                                     config_data=val_dataset_kw,
                                     config_features=val_features_kw,
@@ -325,8 +323,10 @@ def main():
     train_feat_proc = train_augmentations
     val_feat_proc   = val_augmentations
 
-    train_feat_proc.cuda()
-    val_feat_proc.cuda()
+    # train_feat_proc.cuda()
+    # val_feat_proc.cuda()
+    # for i, batch in enumerate(train_loader):
+    #     print(f'loader step: {i}')
 
     steps_per_epoch = len(train_loader) // args.grad_accumulation_steps
 
@@ -341,7 +341,7 @@ def main():
     if args.hidden_hidden_bias_scale is not None:
         rnnt_config['hidden_hidden_bias_scale'] = args.hidden_hidden_bias_scale
     model = RNNT(n_classes=tokenizer.num_labels + 1, **rnnt_config)
-    model.cuda()
+    # model.cpu()
     blank_idx = tokenizer.num_labels
     loss_fn = RNNTLoss(blank_idx=blank_idx)
     logging.log_event(logging.constants.EVAL_MAX_PREDICTION_SYMBOLS, value=args.max_symbol_per_sample)
@@ -372,28 +372,31 @@ def main():
     initial_lrs = [group['lr'] for group in kw['params']]
 
     print_once(f'Starting with LRs: {initial_lrs}')
-    optimizer = FusedLAMB(betas=(args.beta1, args.beta2), eps=opt_eps, max_grad_norm=args.clip_norm, **kw)
+    # optimizer = FusedLAMB(betas=(args.beta1, args.beta2), eps=opt_eps, max_grad_norm=args.clip_norm, **kw)
+    optimizer = optim.Lamb(betas=(args.beta1, args.beta2), eps=opt_eps, **kw)
 
     adjust_lr = lambda step, epoch: lr_policy(
         step, epoch, initial_lrs, optimizer, steps_per_epoch=steps_per_epoch,
         warmup_epochs=args.warmup_epochs, hold_epochs=args.hold_epochs,
         min_lr=args.min_lr, exp_gamma=args.lr_exp_gamma)
 
-    if args.amp:
-        model, optimizer = amp.initialize(
-            models=model,
-            optimizers=optimizer,
-            opt_level='O1',
-            max_loss_scale=512.0)
+    # if args.amp:
+    #     model, optimizer = amp.initialize(
+    #         models=model,
+    #         optimizers=optimizer,
+    #         opt_level='O1',
+    #         max_loss_scale=512.0)
 
     if args.ema > 0:
-        ema_model = copy.deepcopy(model).cuda()
+        # ema_model = copy.deepcopy(model).cuda()
+        ema_model = copy.deepcopy(model)
     else:
         ema_model = None
     logging.log_event(logging.constants.MODEL_EVAL_EMA_FACTOR, value=args.ema)
 
     if multi_gpu:
-        model = DistributedDataParallel(model)
+        # model = DistributedDataParallel(model)
+        model = DDP(model)
 
     # load checkpoint
     meta = {'best_wer': 10**6, 'start_epoch': 0}
@@ -450,11 +453,13 @@ def main():
             if torch.isnan(loss).any():
                 print_once(f'WARNING: loss is NaN; skipping update')
             else:
-                if args.amp:
-                    with amp.scale_loss(loss, optimizer) as scaled_loss:
-                        scaled_loss.backward()
-                else:
-                    loss.backward()
+                # if args.amp:
+                #     with amp.scale_loss(loss, optimizer) as scaled_loss:
+                #         scaled_loss.backward()
+                # else:
+                #     loss.backward()
+                # print('backward')
+                loss.backward()
                 loss_item = loss.item()
                 del loss
                 step_utts += batch[0].size(0) * world_size

@@ -164,7 +164,8 @@ class RNNT(nn.Module):
         x, x_lens = self.encoder["stack_time"](x, x_lens)
         x, _ = self.encoder["post_rnn"](x, None)
 
-        return x.transpose(0, 1), x_lens
+        # return x.transpose(0, 1), x_lens
+        return x.transpose(0, 1).contiguous(), x_lens
 
     def predict(self, y, state=None, add_sos=True):
         """
@@ -198,13 +199,13 @@ class RNNT(nn.Module):
         if add_sos:
             B, U, H = y.shape
             start = torch.zeros((B, 1, H)).to(device=y.device, dtype=y.dtype)
-            y = torch.cat([start, y], dim=1).contiguous()   # (B, U + 1, H)
+            y = torch.cat([start, y], dim=1)#.contiguous()   # (B, U + 1, H)
         else:
             start = None   # makes del call later easier
 
-        y = y.transpose(0, 1)#.contiguous()   # (U + 1, B, H)
+        y = y.transpose(0, 1).contiguous()   # (U + 1, B, H)
         g, hid = self.prediction["dec_rnn"](y, state)
-        g = g.transpose(0, 1)#.contiguous()   # (B, U + 1, H)
+        g = g.transpose(0, 1).contiguous()   # (B, U + 1, H)
         del y, start, state
         return g, hid
 

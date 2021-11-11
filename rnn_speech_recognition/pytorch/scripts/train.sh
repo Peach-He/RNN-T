@@ -14,16 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-export OMP_NUM_THREADS=1
+export OMP_NUM_THREADS=34
 
-: ${DATA_DIR:=${1:-"/datasets/LibriSpeech"}}
+: ${DATA_DIR:=${1:-"/mnt/sdd/LibriSpeech/LibriSpeech"}}
 : ${MODEL_CONFIG:=${2:-"configs/baseline_v3-1023sp.yaml"}}
 : ${OUTPUT_DIR:=${3:-"/results"}}
 : ${CHECKPOINT:=${4:-}}
 : ${CUDNN_BENCHMARK:=true}
-: ${NUM_GPUS:=8}
+: ${NUM_GPUS:=1}
 : ${AMP:=false}
-: ${GLOBAL_BATCH_SIZE:=1024}
+: ${GLOBAL_BATCH_SIZE:=256}
 : ${VAL_BATCH_SIZE:=2}
 : ${GRAD_ACCUMULATION_STEPS:=8}
 : ${LEARNING_RATE:=0.004}
@@ -100,5 +100,7 @@ ARGS+=" --beta2=$BETA2"
 [ -n "$WEIGHTS_INIT_SCALE" ] &&      ARGS+=" --weights_init_scale=$WEIGHTS_INIT_SCALE"
 [ -n "$MAX_SYMBOL_PER_SAMPLE" ] &&  ARGS+=" --max_symbol_per_sample=$MAX_SYMBOL_PER_SAMPLE"
 
-DISTRIBUTED=${DISTRIBUTED:-"-m torch.distributed.launch --nproc_per_node=$NUM_GPUS"}
-python ${DISTRIBUTED} train.py ${ARGS}
+# DISTRIBUTED=${DISTRIBUTED:-"-m torch.distributed.launch --nproc_per_node=$NUM_GPUS"}
+# python ${DISTRIBUTED} train.py ${ARGS} 2>&1 | tee log.log
+echo ${ARGS}
+python -u train.py ${ARGS} 2>&1 | tee log.log

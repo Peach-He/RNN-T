@@ -46,8 +46,8 @@ def eval_model(model, test_loader, decoder):
                 split_targets.append(targets[offset:offset + size])
                 offset += size
 
-            if cuda:
-                inputs = inputs.cuda()
+            # if cuda:
+            #     inputs = inputs.cuda()
 
             out = model(inputs)
             out = out.transpose(0, 1)  # TxNxH
@@ -63,8 +63,8 @@ def eval_model(model, test_loader, decoder):
             total_cer += cer
             total_wer += wer
 
-            if cuda:
-                torch.cuda.synchronize()
+            # if cuda:
+            #     torch.cuda.synchronize()
             del out
         wer = total_wer / len(test_loader.dataset)
         cer = total_cer / len(test_loader.dataset)

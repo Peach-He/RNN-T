@@ -26,8 +26,10 @@ def audio_from_file(file_path, offset=0, duration=0, trim=False, target_sr=16000
     audio = AudioSegment(file_path, target_sr=target_sr, int_values=False,
                          offset=offset, duration=duration, trim=trim)
 
-    samples = torch.tensor(audio.samples, dtype=torch.float).cuda()
-    num_samples = torch.tensor(samples.shape[0]).int().cuda()
+    # samples = torch.tensor(audio.samples, dtype=torch.float).cuda()
+    # num_samples = torch.tensor(samples.shape[0]).int().cuda()
+    samples = torch.tensor(audio.samples, dtype=torch.float)
+    num_samples = torch.tensor(samples.shape[0]).int()
     return (samples.unsqueeze(0), num_samples.unsqueeze(0))
 
 
@@ -63,7 +65,7 @@ class AudioSegment(object):
                 samples = f.read(int(duration * sample_rate), dtype=dtype)
             else:
                 samples = f.read(dtype=dtype)
-        samples = samples.transpose()
+        samples = samples.transpose().congiguous()
 
         samples = self._convert_samples_to_float32(samples)
         if target_sr is not None and target_sr != sample_rate:

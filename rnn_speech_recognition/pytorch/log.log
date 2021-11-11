@@ -1,0 +1,188 @@
+[WARNING] "import intel_pytorch_extension" will be deprecated in future releases. Please use "import torch_ipex" instead.
+:::MLLOG {"namespace": "", "time_ms": 1636612485667, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "train.py", "lineno": 186}}
+:::MLLOG {"namespace": "", "time_ms": 1636612485781, "event_type": "POINT_IN_TIME", "key": "seed", "value": 1, "metadata": {"file": "train.py", "lineno": 205}}
+DLL 2021-11-11 14:34:45.785692 - PARAMETER | epochs :  100
+DLL 2021-11-11 14:34:45.785852 - PARAMETER | warmup_epochs :  6
+DLL 2021-11-11 14:34:45.785912 - PARAMETER | hold_epochs :  40
+DLL 2021-11-11 14:34:45.785983 - PARAMETER | epochs_this_job :  0
+DLL 2021-11-11 14:34:45.786073 - PARAMETER | cudnn_benchmark :  True
+DLL 2021-11-11 14:34:45.786231 - PARAMETER | amp :  False
+DLL 2021-11-11 14:34:45.786275 - PARAMETER | seed :  1
+DLL 2021-11-11 14:34:45.786300 - PARAMETER | local_rank :  0
+DLL 2021-11-11 14:34:45.786335 - PARAMETER | target :  0.058
+DLL 2021-11-11 14:34:45.786369 - PARAMETER | weights_init_scale :  0.5
+DLL 2021-11-11 14:34:45.786426 - PARAMETER | hidden_hidden_bias_scale : 
+DLL 2021-11-11 14:34:45.786460 - PARAMETER | batch_size :  16
+DLL 2021-11-11 14:34:45.786505 - PARAMETER | val_batch_size :  2
+DLL 2021-11-11 14:34:45.786543 - PARAMETER | lr :  0.004
+DLL 2021-11-11 14:34:45.786575 - PARAMETER | min_lr :  1e-05
+DLL 2021-11-11 14:34:45.786601 - PARAMETER | lr_exp_gamma :  0.935
+DLL 2021-11-11 14:34:45.786667 - PARAMETER | weight_decay :  0.001
+DLL 2021-11-11 14:34:45.786706 - PARAMETER | grad_accumulation_steps :  8
+DLL 2021-11-11 14:34:45.786735 - PARAMETER | log_norm :  False
+DLL 2021-11-11 14:34:45.786757 - PARAMETER | clip_norm :  1.0
+DLL 2021-11-11 14:34:45.786783 - PARAMETER | beta1 :  0.9
+DLL 2021-11-11 14:34:45.786812 - PARAMETER | beta2 :  0.999
+DLL 2021-11-11 14:34:45.786834 - PARAMETER | ema :  0.999
+DLL 2021-11-11 14:34:45.786855 - PARAMETER | dali_device :  cpu
+DLL 2021-11-11 14:34:45.786880 - PARAMETER | resume :  True
+DLL 2021-11-11 14:34:45.786909 - PARAMETER | ckpt : 
+DLL 2021-11-11 14:34:45.786936 - PARAMETER | save_at_the_end :  False
+DLL 2021-11-11 14:34:45.786960 - PARAMETER | save_frequency : 
+DLL 2021-11-11 14:34:45.787014 - PARAMETER | keep_milestones :  []
+DLL 2021-11-11 14:34:45.787040 - PARAMETER | save_best_from :  200
+DLL 2021-11-11 14:34:45.787062 - PARAMETER | val_frequency :  1
+DLL 2021-11-11 14:34:45.787091 - PARAMETER | log_frequency :  1
+DLL 2021-11-11 14:34:45.787113 - PARAMETER | prediction_frequency :  1000
+DLL 2021-11-11 14:34:45.787134 - PARAMETER | model_config :  configs/baseline_v3-1023sp.yaml
+DLL 2021-11-11 14:34:45.787156 - PARAMETER | num_buckets :  6
+DLL 2021-11-11 14:34:45.787185 - PARAMETER | train_manifests :  ['/mnt/sdd/LibriSpeech/LibriSpeech/librispeech-train-clean-100-wav.json']
+DLL 2021-11-11 14:34:45.787211 - PARAMETER | val_manifests :  ['/mnt/sdd/LibriSpeech/LibriSpeech/librispeech-dev-clean-wav.json']
+DLL 2021-11-11 14:34:45.787234 - PARAMETER | max_duration : 
+DLL 2021-11-11 14:34:45.787255 - PARAMETER | dataset_dir :  /mnt/sdd/LibriSpeech/LibriSpeech
+DLL 2021-11-11 14:34:45.787284 - PARAMETER | output_dir :  /results
+DLL 2021-11-11 14:34:45.787306 - PARAMETER | log_file : 
+DLL 2021-11-11 14:34:45.787326 - PARAMETER | max_symbol_per_sample :  300
+:::MLLOG {"namespace": "", "time_ms": 1636612485805, "event_type": "POINT_IN_TIME", "key": "gradient_accumulation_steps", "value": 8, "metadata": {"file": "train.py", "lineno": 219}}
+:::MLLOG {"namespace": "", "time_ms": 1636612485806, "event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "rnnt", "metadata": {"file": "train.py", "lineno": 222}}
+:::MLLOG {"namespace": "", "time_ms": 1636612485806, "event_type": "POINT_IN_TIME", "key": "submission_org", "value": "my-organization", "metadata": {"file": "train.py", "lineno": 223}}
+:::MLLOG {"namespace": "", "time_ms": 1636612485806, "event_type": "POINT_IN_TIME", "key": "submission_division", "value": "closed", "metadata": {"file": "train.py", "lineno": 224}}
+:::MLLOG {"namespace": "", "time_ms": 1636612485806, "event_type": "POINT_IN_TIME", "key": "submission_status", "value": "onprem", "metadata": {"file": "train.py", "lineno": 225}}
+:::MLLOG {"namespace": "", "time_ms": 1636612485806, "event_type": "POINT_IN_TIME", "key": "submission_platform", "value": "my platform", "metadata": {"file": "train.py", "lineno": 226}}
+:::MLLOG {"namespace": "", "time_ms": 1636612485806, "event_type": "INTERVAL_END", "key": "init_stop", "value": null, "metadata": {"file": "train.py", "lineno": 228}}
+:::MLLOG {"namespace": "", "time_ms": 1636612485806, "event_type": "INTERVAL_START", "key": "run_start", "value": null, "metadata": {"file": "train.py", "lineno": 231}}
+Setting up datasets...
+:::MLLOG {"namespace": "", "time_ms": 1636612485806, "event_type": "POINT_IN_TIME", "key": "data_train_max_duration", "value": 16.7, "metadata": {"file": "train.py", "lineno": 250}}
+:::MLLOG {"namespace": "", "time_ms": 1636612485807, "event_type": "POINT_IN_TIME", "key": "data_speed_perturbaton_max", "value": 1.15, "metadata": {"file": "train.py", "lineno": 252}}
+:::MLLOG {"namespace": "", "time_ms": 1636612485807, "event_type": "POINT_IN_TIME", "key": "data_speed_perturbaton_min", "value": 0.85, "metadata": {"file": "train.py", "lineno": 254}}
+:::MLLOG {"namespace": "", "time_ms": 1636612485807, "event_type": "POINT_IN_TIME", "key": "data_spec_augment_freq_n", "value": 2, "metadata": {"file": "train.py", "lineno": 256}}
+:::MLLOG {"namespace": "", "time_ms": 1636612485807, "event_type": "POINT_IN_TIME", "key": "data_spec_augment_freq_min", "value": 0, "metadata": {"file": "train.py", "lineno": 258}}
+:::MLLOG {"namespace": "", "time_ms": 1636612485807, "event_type": "POINT_IN_TIME", "key": "data_spec_augment_freq_max", "value": 20, "metadata": {"file": "train.py", "lineno": 260}}
+:::MLLOG {"namespace": "", "time_ms": 1636612485807, "event_type": "POINT_IN_TIME", "key": "data_spec_augment_time_n", "value": 10, "metadata": {"file": "train.py", "lineno": 262}}
+:::MLLOG {"namespace": "", "time_ms": 1636612485807, "event_type": "POINT_IN_TIME", "key": "data_spec_augment_time_min", "value": 0, "metadata": {"file": "train.py", "lineno": 264}}
+:::MLLOG {"namespace": "", "time_ms": 1636612485807, "event_type": "POINT_IN_TIME", "key": "data_spec_augment_time_max", "value": 0.03, "metadata": {"file": "train.py", "lineno": 266}}
+:::MLLOG {"namespace": "", "time_ms": 1636612485807, "event_type": "POINT_IN_TIME", "key": "global_batch_size", "value": 16, "metadata": {"file": "train.py", "lineno": 268}}
+:::MLLOG {"namespace": "", "time_ms": 1636612485810, "event_type": "POINT_IN_TIME", "key": "data_train_num_buckets", "value": 6, "metadata": {"file": "train.py", "lineno": 288}}
+Dataset read by DALI. Number of samples: 28252
+config data: {'sample_rate': 16000, 'max_duration': 16.7, 'normalize_transcripts': True, 'trim_silence': True, 'speed_perturbation': {'min_rate': 0.85, 'max_rate': 1.15, 'p': 1.0}}
+config feature: {'sample_rate': 16000, 'window_size': 0.02, 'window_stride': 0.01, 'window': 'hann', 'normalize': 'per_feature', 'n_fft': 512, 'preemph': 0.97, 'n_filt': 80, 'lowfreq': 0, 'highfreq': None, 'log': True, 'dither': 1e-05}
+Initializing DALI with parameters:
+	           __class__ : <class 'common.data.dali.pipeline.DaliPipeline'>
+	          batch_size : 2
+	           device_id : None
+	        dither_coeff : 1e-05
+	           file_root : /mnt/sdd/LibriSpeech/LibriSpeech
+	        max_duration : 16.7
+	           nfeatures : 80
+	                nfft : 512
+	         num_threads : 72
+	       pipeline_type : train
+	       preemph_coeff : 0.97
+	preprocessing_device : cpu
+	      resample_range : [0.85, 1.15]
+	         sample_rate : 16000
+	             sampler : <common.data.dali.sampler.BucketingSampler object at 0x7ff3e3c14cd0>
+	                self : <common.data.dali.pipeline.DaliPipeline object at 0x7ff3e3908950>
+	   silence_threshold : -60
+	         window_size : 0.02
+	       window_stride : 0.01
+/root/sw/miniconda3/envs/rnnt/lib/python3.7/site-packages/nvidia/dali/plugin/base_iterator.py:161: Warning: Please set `reader_name` and don't set last_batch_padded and size manually whenever possible. This may lead, in some situations, to missing some samples or returning duplicated ones. Check the Sharding section of the documentation for more details.
+  _iterator_deprecation_warning()
+/root/sw/miniconda3/envs/rnnt/lib/python3.7/site-packages/nvidia/dali/ops.py:627: DeprecationWarning: WARNING: `file_reader` is now deprecated. Use `readers.file` instead.
+In DALI 1.0 all readers were moved into a dedicated :mod:`~nvidia.dali.fn.readers`
+submodule and renamed to follow a common pattern. This is a placeholder operator with identical
+functionality to allow for backward compatibility.
+  op_instances.append(_OperatorInstance(input_set, self, **kwargs))
+/root/sw/miniconda3/envs/rnnt/lib/python3.7/site-packages/nvidia/dali/ops.py:627: DeprecationWarning: WARNING: `uniform` is now deprecated. Use `random.uniform` instead.
+  op_instances.append(_OperatorInstance(input_set, self, **kwargs))
+/root/sw/miniconda3/envs/rnnt/lib/python3.7/site-packages/nvidia/dali/ops.py:627: DeprecationWarning: WARNING: `audio_decoder` is now deprecated. Use `decoders.audio` instead.
+In DALI 1.0 all decoders were moved into a dedicated :mod:`~nvidia.dali.fn.decoders`
+submodule and renamed to follow a common pattern. This is a placeholder operator with identical
+functionality to allow for backward compatibility.
+  op_instances.append(_OperatorInstance(input_set, self, **kwargs))
+/root/sw/miniconda3/envs/rnnt/lib/python3.7/site-packages/nvidia/dali/ops.py:627: DeprecationWarning: WARNING: `normal_distribution` is now deprecated. Use `random.normal` instead.
+  op_instances.append(_OperatorInstance(input_set, self, **kwargs))
+Dataset read by DALI. Number of samples: 2703
+config data: {'sample_rate': 16000, 'max_duration': inf, 'normalize_transcripts': True, 'trim_silence': True, 'speed_perturbation': None}
+config feature: {'sample_rate': 16000, 'window_size': 0.02, 'window_stride': 0.01, 'window': 'hann', 'normalize': 'per_feature', 'n_fft': 512, 'preemph': 0.97, 'n_filt': 80, 'lowfreq': 0, 'highfreq': None, 'log': True, 'dither': 1e-05}
+Initializing DALI with parameters:
+	           __class__ : <class 'common.data.dali.pipeline.DaliPipeline'>
+	          batch_size : 2
+	           device_id : None
+	        dither_coeff : 1e-05
+	           file_root : /mnt/sdd/LibriSpeech/LibriSpeech
+	        max_duration : inf
+	           nfeatures : 80
+	                nfft : 512
+	         num_threads : 72
+	       pipeline_type : val
+	       preemph_coeff : 0.97
+	preprocessing_device : cpu
+	      resample_range : None
+	         sample_rate : 16000
+	             sampler : <common.data.dali.sampler.SimpleSampler object at 0x7ff3e3c19c50>
+	                self : <common.data.dali.pipeline.DaliPipeline object at 0x7ff3e3b9ad50>
+	   silence_threshold : -60
+	         window_size : 0.02
+	       window_stride : 0.01
+/root/sw/miniconda3/envs/rnnt/lib/python3.7/site-packages/nvidia/dali/ops.py:627: DeprecationWarning: WARNING: `file_reader` is now deprecated. Use `readers.file` instead.
+In DALI 1.0 all readers were moved into a dedicated :mod:`~nvidia.dali.fn.readers`
+submodule and renamed to follow a common pattern. This is a placeholder operator with identical
+functionality to allow for backward compatibility.
+  op_instances.append(_OperatorInstance(input_set, self, **kwargs))
+/root/sw/miniconda3/envs/rnnt/lib/python3.7/site-packages/nvidia/dali/ops.py:627: DeprecationWarning: WARNING: `audio_decoder` is now deprecated. Use `decoders.audio` instead.
+In DALI 1.0 all decoders were moved into a dedicated :mod:`~nvidia.dali.fn.decoders`
+submodule and renamed to follow a common pattern. This is a placeholder operator with identical
+functionality to allow for backward compatibility.
+  op_instances.append(_OperatorInstance(input_set, self, **kwargs))
+/root/sw/miniconda3/envs/rnnt/lib/python3.7/site-packages/nvidia/dali/ops.py:627: DeprecationWarning: WARNING: `normal_distribution` is now deprecated. Use `random.normal` instead.
+  op_instances.append(_OperatorInstance(input_set, self, **kwargs))
+:::MLLOG {"namespace": "", "time_ms": 1636612491977, "event_type": "POINT_IN_TIME", "key": "train_samples", "value": 28252, "metadata": {"file": "train.py", "lineno": 334}}
+:::MLLOG {"namespace": "", "time_ms": 1636612491978, "event_type": "POINT_IN_TIME", "key": "eval_samples", "value": 2703, "metadata": {"file": "train.py", "lineno": 335}}
+:::MLLOG {"namespace": "", "time_ms": 1636612491978, "event_type": "POINT_IN_TIME", "key": "model_weights_initialization_scale", "value": 0.5, "metadata": {"file": "train.py", "lineno": 339}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492111, "event_type": "POINT_IN_TIME", "key": "weights_initialization", "value": null, "metadata": {"file": "/root/ht/ML/training/rnn_speech_recognition/pytorch/common/rnn.py", "lineno": 79, "tensor": "pre_rnn"}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492271, "event_type": "POINT_IN_TIME", "key": "weights_initialization", "value": null, "metadata": {"file": "/root/ht/ML/training/rnn_speech_recognition/pytorch/common/rnn.py", "lineno": 79, "tensor": "post_rnn"}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492276, "event_type": "POINT_IN_TIME", "key": "weights_initialization", "value": null, "metadata": {"file": "/root/ht/ML/training/rnn_speech_recognition/pytorch/rnnt/model.py", "lineno": 107, "tensor": "pred_embed"}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492335, "event_type": "POINT_IN_TIME", "key": "weights_initialization", "value": null, "metadata": {"file": "/root/ht/ML/training/rnn_speech_recognition/pytorch/common/rnn.py", "lineno": 79, "tensor": "dec_rnn"}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492337, "event_type": "POINT_IN_TIME", "key": "weights_initialization", "value": null, "metadata": {"file": "/root/ht/ML/training/rnn_speech_recognition/pytorch/rnnt/model.py", "lineno": 127, "tensor": "joint_pred"}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492342, "event_type": "POINT_IN_TIME", "key": "weights_initialization", "value": null, "metadata": {"file": "/root/ht/ML/training/rnn_speech_recognition/pytorch/rnnt/model.py", "lineno": 132, "tensor": "joint_enc"}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492345, "event_type": "POINT_IN_TIME", "key": "weights_initialization", "value": null, "metadata": {"file": "/root/ht/ML/training/rnn_speech_recognition/pytorch/rnnt/model.py", "lineno": 139, "tensor": "joint_net"}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492346, "event_type": "POINT_IN_TIME", "key": "eval_max_prediction_symbols", "value": 300, "metadata": {"file": "train.py", "lineno": 348}}
+Model size: 49.0M params
+
+:::MLLOG {"namespace": "", "time_ms": 1636612492346, "event_type": "POINT_IN_TIME", "key": "opt_name", "value": "lamb", "metadata": {"file": "train.py", "lineno": 355}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492346, "event_type": "POINT_IN_TIME", "key": "opt_base_learning_rate", "value": 0.004, "metadata": {"file": "train.py", "lineno": 356}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492346, "event_type": "POINT_IN_TIME", "key": "opt_lamb_epsilon", "value": 1e-09, "metadata": {"file": "train.py", "lineno": 357}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492346, "event_type": "POINT_IN_TIME", "key": "opt_lamb_learning_rate_decay_poly_power", "value": 0.935, "metadata": {"file": "train.py", "lineno": 358}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492346, "event_type": "POINT_IN_TIME", "key": "opt_learning_rate_warmup_epochs", "value": 6, "metadata": {"file": "train.py", "lineno": 359}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492346, "event_type": "POINT_IN_TIME", "key": "opt_lamb_learning_rate_hold_epochs", "value": 40, "metadata": {"file": "train.py", "lineno": 360}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492346, "event_type": "POINT_IN_TIME", "key": "opt_lamb_beta_1", "value": 0.9, "metadata": {"file": "train.py", "lineno": 361}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492346, "event_type": "POINT_IN_TIME", "key": "opt_lamb_beta_2", "value": 0.999, "metadata": {"file": "train.py", "lineno": 362}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492346, "event_type": "POINT_IN_TIME", "key": "opt_gradient_clip_norm", "value": 1.0, "metadata": {"file": "train.py", "lineno": 363}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492347, "event_type": "POINT_IN_TIME", "key": "opt_learning_rate_alt_decay_func", "value": true, "metadata": {"file": "train.py", "lineno": 364}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492347, "event_type": "POINT_IN_TIME", "key": "opt_learning_rate_alt_warmup_func", "value": true, "metadata": {"file": "train.py", "lineno": 365}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492347, "event_type": "POINT_IN_TIME", "key": "opt_lamb_learning_rate_min", "value": 1e-05, "metadata": {"file": "train.py", "lineno": 366}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492347, "event_type": "POINT_IN_TIME", "key": "opt_weight_decay", "value": 0.001, "metadata": {"file": "train.py", "lineno": 367}}
+Starting with LRs: [0.004, 0.004, 0.004]
+:::MLLOG {"namespace": "", "time_ms": 1636612492436, "event_type": "POINT_IN_TIME", "key": "model_eval_ema_factor", "value": 0.999, "metadata": {"file": "train.py", "lineno": 396}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492439, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "train.py", "lineno": 424, "first_epoch_num": 1, "epoch_count": 1}}
+:::MLLOG {"namespace": "", "time_ms": 1636612492441, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "train.py", "lineno": 426, "epoch_num": 1}}
+/root/sw/miniconda3/envs/rnnt/lib/python3.7/site-packages/torch/_tensor.py:575: UserWarning: floor_divide is deprecated, and will be removed in a future version of pytorch. It currently rounds toward 0 (like the 'trunc' function NOT 'floor'). This results in incorrect rounding for negative values.
+To keep the current behavior, use torch.div(a, b, rounding_mode='trunc'), or for actual floor division, use torch.div(a, b, rounding_mode='floor'). (Triggered internally at  /pytorch/aten/src/ATen/native/BinaryOps.cpp:467.)
+  return torch.floor_divide(self, other)
+[W LegacyTypeDispatch.h:79] Warning: AutoNonVariableTypeMode is deprecated and will be removed in 1.10 release. For kernel implementations please use AutoDispatchBelowADInplaceOrView instead, If you are looking for a user facing API to enable running your inference-only workload, please use c10::InferenceMode. Using AutoDispatchBelowADInplaceOrView in user code is under risk of producing silent wrong result in some edge cases. See Note [AutoDispatchBelowAutograd] for more details. (function operator())
+DLL 2021-11-11 14:35:13.511424 - epoch    1 | iter    1/1765 | loss  258.29 | utts/s     1 | took 21.07 s | train_grad-norm :  0.0 | train_seq-len-min :  302 | train_seq-len-max :  534 | lrate 1.00e-05
+DLL 2021-11-11 14:35:49.679910 - epoch    1 | iter    2/1765 | loss  296.10 | utts/s     0 | took 36.10 s | train_grad-norm :  0.0 | train_seq-len-min :  317 | train_seq-len-max :  614 | lrate 1.00e-05
+DLL 2021-11-11 14:36:08.050801 - epoch    1 | iter    3/1765 | loss  213.09 | utts/s     1 | took 18.34 s | train_grad-norm :  0.0 | train_seq-len-min :  101 | train_seq-len-max :  598 | lrate 1.00e-05
+DLL 2021-11-11 14:36:27.177810 - epoch    1 | iter    4/1765 | loss  231.73 | utts/s     1 | took 19.05 s | train_grad-norm :  0.0 | train_seq-len-min :  130 | train_seq-len-max :  574 | lrate 1.00e-05
+DLL 2021-11-11 14:36:44.749559 - epoch    1 | iter    5/1765 | loss  211.32 | utts/s     1 | took 17.40 s | train_grad-norm :  0.0 | train_seq-len-min :  63 | train_seq-len-max :  545 | lrate 1.00e-05
+DLL 2021-11-11 14:37:02.227782 - epoch    1 | iter    6/1765 | loss  206.47 | utts/s     1 | took 17.45 s | train_grad-norm :  0.0 | train_seq-len-min :  97 | train_seq-len-max :  552 | lrate 1.00e-05
+DLL 2021-11-11 14:37:19.456038 - epoch    1 | iter    7/1765 | loss  249.87 | utts/s     1 | took 17.19 s | train_grad-norm :  0.0 | train_seq-len-min :  110 | train_seq-len-max :  600 | lrate 1.00e-05
+DLL 2021-11-11 14:37:37.851198 - epoch    1 | iter    8/1765 | loss  249.15 | utts/s     1 | took 18.32 s | train_grad-norm :  0.0 | train_seq-len-min :  125 | train_seq-len-max :  606 | lrate 1.00e-05
+DLL 2021-11-11 14:37:52.899754 - epoch    1 | iter    9/1765 | loss   86.85 | utts/s     1 | took 15.01 s | train_grad-norm :  0.0 | train_seq-len-min :  90 | train_seq-len-max :  538 | lrate 1.00e-05
+DLL 2021-11-11 14:38:10.750028 - epoch    1 | iter   10/1765 | loss  215.51 | utts/s     1 | took 17.83 s | train_grad-norm :  0.0 | train_seq-len-min :  120 | train_seq-len-max :  570 | lrate 1.00e-05
+DLL 2021-11-11 14:38:31.297587 - epoch    1 | iter   11/1765 | loss  242.50 | utts/s     1 | took 20.46 s | train_grad-norm :  0.0 | train_seq-len-min :  129 | train_seq-len-max :  536 | lrate 1.00e-05
+DLL 2021-11-11 14:38:50.178208 - epoch    1 | iter   12/1765 | loss  219.31 | utts/s     1 | took 18.85 s | train_grad-norm :  0.0 | train_seq-len-min :  129 | train_seq-len-max :  602 | lrate 1.00e-05
+DLL 2021-11-11 14:39:09.043126 - epoch    1 | iter   13/1765 | loss  233.93 | utts/s     1 | took 18.79 s | train_grad-norm :  0.0 | train_seq-len-min :  342 | train_seq-len-max :  526 | lrate 1.00e-05
+DLL 2021-11-11 14:39:27.120497 - epoch    1 | iter   14/1765 | loss  236.34 | utts/s     1 | took 18.01 s | train_grad-norm :  0.0 | train_seq-len-min :  364 | train_seq-len-max :  577 | lrate 1.00e-05
+DLL 2021-11-11 14:39:45.384642 - epoch    1 | iter   15/1765 | loss  212.45 | utts/s     1 | took 18.23 s | train_grad-norm :  0.0 | train_seq-len-min :  318 | train_seq-len-max :  566 | lrate 1.00e-05

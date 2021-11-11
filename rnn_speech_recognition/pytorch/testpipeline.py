@@ -1,44 +1,27 @@
-# Copyright (c) 2020, NVIDIA CORPORATION. All rights reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#           http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import nvidia.dali
 import nvidia.dali.ops as ops
 import nvidia.dali.types as types
+import nvidia.dali.fn as fn
 import multiprocessing
 import numpy as np
 import torch
 import math
 
-class PipelineParams:
-    def __init__(
-            self,
-            sample_rate=16000,
-            max_duration=float("inf"),
-            normalize_transcripts=True,
-            trim_silence=False,
-            speed_perturbation=None
-        ):
-        pass
+batch_size = 1
+audio_files = "/root/audio"
+config_data = {'sample_rate': 16000, 'max_duration': 16.7, 'normalize_transcripts': True, 'trim_silence': True, 'speed_perturbation': {'min_rate': 0.85, 'max_rate': 1.15, 'p': 1.0}}
+config_features = {'sample_rate': 16000, 'window_size': 0.02, 'window_stride': 0.01, 'window': 'hann', 'normalize': 'per_feature', 'n_fft': 512, 'preemph': 0.97, 'n_filt': 80, 'lowfreq': 0, 'highfreq': None, 'log': True, 'dither': 1e-05}
+device_type = 'cpu'
+pipeline_type = 'train'
+gpu_id = 0
 
-class SpeedPerturbationParams:
-    def __init__(
-            self,
-            min_rate=0.85,
-            max_rate=1.15,
-            p=1.0,
-        ):
-        pass
+output_files, transcripts = {}, {}
+max_duration = config_data['max_duration']
+print(f'config data: {config_data}')
+print(f'config feature: {config_features}')
+print(f'device: {device_type}')
+
+
 
 class DaliPipeline(nvidia.dali.pipeline.Pipeline):
     def __init__(self, *,
@@ -47,7 +30,6 @@ class DaliPipeline(nvidia.dali.pipeline.Pipeline):
                  num_threads,
                  batch_size,
                  file_root: str,
-                 sampler,
                  sample_rate,
                  resample_range: list,
                  window_size,
@@ -84,48 +66,46 @@ class DaliPipeline(nvidia.dali.pipeline.Pipeline):
         self.max_duration = max_duration
         self.do_remove_silence = True if silence_threshold is not None else False
 
-        shuffle = train_pipeline and not sampler.is_sampler_random()
-        # 读取audio文件
-        self.read = ops.FileReader(name="Reader", pad_last_batch=(pipeline_type == 'val'), device="cpu", file_root=file_root, file_list=sampler.get_file_list_path(), shard_id=shard_id,
+        shuffle = True
+        print(f'file_root: {file_root}')
+        self.read = ops.FileReader(name="Reader", pad_last_batch=(pipeline_type == 'val'), device="cpu", file_root=file_root, shard_id=shard_id,
                                    num_shards=n_shards, shuffle_after_epoch=shuffle)
 
         if resample_range is not None:
-            # 生成均匀分布的随机数
             self.speed_perturbation_coeffs = ops.Uniform(device="cpu", range=resample_range)
         else:
             self.speed_perturbation_coeffs = None
-        # audio decoder
+
         self.decode = ops.AudioDecoder(device="cpu", sample_rate=self.sample_rate if resample_range is None else None,
                                        dtype=types.FLOAT, downmix=True)
-        # 生成正态分布的随机数
+
         self.normal_distribution = ops.NormalDistribution(device=preprocessing_device)
-        # 对数据进行预加重滤波器
+
         self.preemph = ops.PreemphasisFilter(device=preprocessing_device, preemph_coeff=preemph_coeff)
-        # 对1D信号生成频谱图
+
         self.spectrogram = ops.Spectrogram(device=preprocessing_device, nfft=nfft,
                                            window_length=window_size * sample_rate,
                                            window_step=window_stride * sample_rate)
-        # 通过一组三角滤波，将频谱转换为mel spectorgram
+
         self.mel_fbank = ops.MelFilterBank(device=preprocessing_device, sample_rate=sample_rate, nfilter=self.nfeatures,
                                            normalize=True)
-        # 将数值转换为db单位
+
         self.log_features = ops.ToDecibels(device=preprocessing_device, multiplier=np.log(10), reference=1.0,
                                            cutoff_db=math.log(1e-20))
-        # 返回data shape
+
         self.get_shape = ops.Shapes(device=preprocessing_device)
-        # 对数据进行normalize
+
         self.normalize = ops.Normalize(device=preprocessing_device, axes=[1])
-        # pad data
+
         self.pad = ops.Pad(device=preprocessing_device, fill_value=0)
 
-        # Silence trimming，进行音频文件头尾的静音区检测
+        # Silence trimming
         self.get_nonsilent_region = ops.NonsilentRegion(device="cpu", cutoff_db=silence_threshold)
-        # 提取tensor slice
         self.trim_silence = ops.Slice(device="cpu", normalized_anchor=False, normalized_shape=False, axes=[0])
         self.to_float = ops.Cast(device="cpu", dtype=types.FLOAT)
 
     @classmethod
-    def from_config(cls, pipeline_type, device_id, batch_size, file_root: str, sampler, config_data: dict,
+    def from_config(cls, pipeline_type, device_id, batch_size, file_root: str, config_data: dict,
                     config_features: dict, device_type: str = "gpu", do_resampling: bool = True,
                     num_cpu_threads=multiprocessing.cpu_count()):
 
@@ -152,7 +132,6 @@ class DaliPipeline(nvidia.dali.pipeline.Pipeline):
                    num_threads=num_cpu_threads,
                    batch_size=batch_size,
                    file_root=file_root,
-                   sampler=sampler,
                    sample_rate=sample_rate,
                    resample_range=resample_range,
                    window_size=window_size,
@@ -213,3 +192,11 @@ class DaliPipeline(nvidia.dali.pipeline.Pipeline):
         # When modifying DALI pipeline returns, make sure you update `output_map` in DALIGenericIterator invocation
         return audio, label, audio_len
 
+
+
+pipeline = DaliPipeline.from_config(config_data=config_data, config_features=config_features, device_id=gpu_id,
+                                    file_root=audio_files,
+                                    device_type=device_type, batch_size=batch_size,
+                                    pipeline_type=pipeline_type)
+
+pipeline.build()

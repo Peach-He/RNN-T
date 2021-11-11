@@ -19,7 +19,7 @@ import librosa
 import torch
 import torch.nn as nn
 
-from apex import amp
+# from apex import amp
 
 
 class BaseFeatures(nn.Module):
@@ -34,11 +34,12 @@ class BaseFeatures(nn.Module):
 
     def __call__(self, x):
         audio, audio_lens = x
-        if self.optim_level == 1:
-            with amp.disable_casts():
-                return self.calculate_features(audio, audio_lens)
-        else:
-            return self.calculate_features(audio, audio_lens)
+        # if self.optim_level == 1:
+        #     with amp.disable_casts():
+        #         return self.calculate_features(audio, audio_lens)
+        # else:
+        #     return self.calculate_features(audio, audio_lens)
+        return self.calculate_features(audio, audio_lens)
 
 
 class SpecAugment(BaseFeatures):

@@ -75,8 +75,10 @@ class DaliRnntIterator(object):
                 ) for t in transcripts
             ]
         transcripts = [self.tokenizer.tokenize(t) for t in transcripts]
-        transcripts = [torch.tensor(t) for t in transcripts]
-        self.tr = np.array(transcripts, dtype=object)
+        # transcripts = [torch.tensor(t) for t in transcripts]
+        self.tr = np.empty(len(transcripts), dtype=object)
+        for i in range(len(transcripts)):
+            self.tr[i] = torch.tensor(transcripts[i])
         self.t_sizes = torch.tensor([len(t) for t in transcripts], dtype=torch.int32)
 
     def _gen_transcripts(self, labels, normalize_transcripts: bool = True):
@@ -84,13 +86,13 @@ class DaliRnntIterator(object):
         Generate transcripts in format expected by NN
         """
         ids = labels.flatten().numpy()
-        transcripts = self.tr[ids]
+        transcripts = self.tr[ids].tolist()
         # Tensors are padded with 0. In `sentencepiece` we set it to <unk>,
         # because it cannot be disabled, and is absent in the data.
         # Note this is different from the RNN-T blank token (index 1023).
         transcripts = torch.nn.utils.rnn.pad_sequence(transcripts, batch_first=True)
 
-        return transcripts.cuda(), self.t_sizes[ids].cuda()
+        return transcripts, self.t_sizes[ids]
 
     def __next__(self):
         data = self.dali_it.__next__()

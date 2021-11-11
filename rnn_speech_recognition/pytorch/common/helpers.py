@@ -17,7 +17,7 @@ import os
 import re
 from collections import OrderedDict
 
-from apex import amp
+# from apex import amp
 
 import torch
 import torch.distributed as dist
@@ -175,7 +175,7 @@ class Checkpointer(object):
             'state_dict': unwrap_ddp(model).state_dict(),
             'ema_state_dict': unwrap_ddp(ema_model).state_dict() if ema_model is not None else None,
             'optimizer': optimizer.state_dict(),
-            'amp': amp.state_dict() if self.use_amp else None,
+            # 'amp': amp.state_dict() if self.use_amp else None,
         }
 
         if is_best:
@@ -234,8 +234,8 @@ class Checkpointer(object):
 
         optimizer.load_state_dict(checkpoint['optimizer'])
 
-        if self.use_amp:
-            amp.load_state_dict(checkpoint['amp'])
+        # if self.use_amp:
+            # amp.load_state_dict(checkpoint['amp'])
 
         meta['start_epoch'] = checkpoint.get('epoch')
         meta['best_wer'] = checkpoint.get('best_wer', meta['best_wer'])
