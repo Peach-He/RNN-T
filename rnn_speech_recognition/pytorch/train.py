@@ -20,10 +20,10 @@ import time
 
 import torch
 import numpy as np
-import torch.distributed as dist
+# import torch.distributed as dist
 import torch_optimizer as optim
 from torch.nn.parallel import DistributedDataParallel as DDP
-import intel_pytorch_extension as ipex
+import distributed as dist
 
 from common import helpers
 from common.data.dali import sampler as dali_sampler
@@ -64,6 +64,8 @@ def parse_args():
     training.add_argument('--target', default=0.058, type=float, help='Target WER accuracy')
     training.add_argument('--weights_init_scale', default=0.5, type=float, help='If set, overwrites value in config.')
     training.add_argument('--hidden_hidden_bias_scale', type=float, help='If set, overwrites value in config.')
+    training.add_argument('--dist_backend', type=str, default='gloo', help='Distributed training backend')
+    training.add_argument('--use_gpu', action='store_true', default=False, help='Use GPU accelerator')
 
     optim = parser.add_argument_group('optimization setup')
     optim.add_argument('--batch_size', default=128, type=int,
@@ -188,17 +190,33 @@ def main():
 
     assert args.prediction_frequency is None or args.prediction_frequency % args.log_frequency == 0
 
-    # torch.backends.cudnn.benchmark = args.cudnn_benchmark
-
     # set up distributed training
+    dist.init_distributed(backend=args.dist_backend)
+    world_size = dist.my_size
+    use_gpu = args.use_gpu and torch.cuda.is_available()
     multi_gpu = int(os.environ.get('WORLD_SIZE', 1)) > 1
-    if multi_gpu:
-        torch.cuda.set_device(args.local_rank)
-        dist.init_process_group(backend='nccl', init_method='env://')
-        world_size = dist.get_world_size()
-        print_once(f'Distributed training with {world_size} GPUs\n')
+    if use_gpu:
+        torch.cuda.manual_seed_all(args.numpy_rand_seed)
+        torch.backends.cudnn.deterministic = True
+        if dist.my_size > 1:
+            ngpus = torch.cuda.device_count()  # 1
+            # ngpus = 1
+            device = torch.device("cuda", dist.my_local_rank)
+        else:
+            device = torch.device("cuda", 0)
+            ngpus = torch.cuda.device_count()  # 1
+        print("Using {} GPU(s)...".format(ngpus))
     else:
-        world_size = 1
+        device = torch.device("cpu")
+        print("Using CPU...")
+
+    # if multi_gpu:
+    #     torch.cuda.set_device(args.local_rank)
+    #     dist.init_process_group(backend='nccl', init_method='env://')
+    #     world_size = dist.get_world_size()
+    #     print_once(f'Distributed training with {world_size} GPUs\n')
+    # else:
+    #     world_size = 1
 
     if args.seed is not None:
         logging.log_event(logging.constants.SEED, value=args.seed)
@@ -225,11 +243,11 @@ def main():
     logging.log_event(logging.constants.SUBMISSION_PLATFORM, value='my platform')
 
     logging.log_end(logging.constants.INIT_STOP)
-    if multi_gpu:
+    if world_size > 1:
         torch.distributed.barrier()
     logging.log_start(logging.constants.RUN_START)
-    if multi_gpu:
-        torch.distributed.barrier()
+    # if multi_gpu:
+    #     torch.distributed.barrier()
 
     print_once('Setting up datasets...')
     (
@@ -393,8 +411,7 @@ def main():
     else:
         ema_model = None
     logging.log_event(logging.constants.MODEL_EVAL_EMA_FACTOR, value=args.ema)
-
-    if multi_gpu:
+    if world_size > 1:
         # model = DistributedDataParallel(model)
         model = DDP(model)
 

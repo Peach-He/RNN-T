@@ -104,18 +104,18 @@ def process_evaluation_epoch(aggregates):
     references = aggregates['txts']
 
     wer, scores, num_words = word_error_rate(hypotheses, references)
-    multi_gpu = dist.is_initialized()
-    if multi_gpu:
+    disted = dist.is_initialized()
+    if disted:
         if eloss is not None:
             eloss /= dist.get_world_size()
-            eloss_tensor = torch.tensor(eloss).cuda()
+            eloss_tensor = torch.tensor(eloss)#.cuda()
             dist.all_reduce(eloss_tensor)
             eloss = eloss_tensor.item()
 
-        scores_tensor = torch.tensor(scores).cuda()
+        scores_tensor = torch.tensor(scores)#.cuda()
         dist.all_reduce(scores_tensor)
         scores = scores_tensor.item()
-        num_words_tensor = torch.tensor(num_words).cuda()
+        num_words_tensor = torch.tensor(num_words)#.cuda()
         dist.all_reduce(num_words_tensor)
         num_words = num_words_tensor.item()
         wer = scores * 1.0 / num_words

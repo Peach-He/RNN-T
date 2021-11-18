@@ -28,7 +28,7 @@ from data.bucketing_sampler import BucketingSampler, SpectrogramDatasetWithLengt
 from data.data_loader import AudioDataLoader, SpectrogramDataset
 from decoder import GreedyDecoder
 from model import DeepSpeech, supported_rnns
-from params import cuda
+# from params import cuda
 
 def eval_model(model, test_loader, decoder):
         start_iter = 0  # Reset start iteration for next epoch
